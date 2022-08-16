@@ -229,10 +229,20 @@ class ScanNetMatchPairDataset(torch.utils.data.Dataset):
     xyz0_ = np.round(xyz0_[:,:3] / self.voxel_size)
     xyz0_ -= xyz0_.min(0, keepdims=1)
     _, sel0 = ME.utils.sparse_quantize(xyz0_, return_index=True)
+    # same num_points used in TARL
+    if len(sel0) > 40000:
+        np.random.seed(42)
+        sel0 = np.random.choice(sel0, 40000, replace=False)
+
     xyz1_ = xyz1.copy()
     xyz1_ = np.round(xyz1_[:,:3] / self.voxel_size)
     xyz1_ -= xyz1_.min(0, keepdims=1)
     _, sel1 = ME.utils.sparse_quantize(xyz1_, return_index=True)
+    # same num_points used in TARL
+    if len(sel1) > 40000:
+        np.random.seed(42)
+        sel1 = np.random.choice(sel1, 40000, replace=False)
+
 
     # Make point clouds using voxelized points
     pcd0 = make_open3d_point_cloud(xyz0[:,:3])
