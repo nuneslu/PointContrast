@@ -2,6 +2,8 @@ services:
         pretrain:
                 image: nuneslu/pointcontrast:latest
                 runtime: nvidia
+                environment:
+                      - NVIDIA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
                 volumes: 
                         - $PWD:/home/PointContrast
                         - $PWD/Datasets/:/home/PointContrast/Datasets
