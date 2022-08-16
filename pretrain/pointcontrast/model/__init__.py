@@ -3,7 +3,8 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-import model.res16unet as res16unet
+#import model.res16unet as res16unet
+import model.minkunet as minkunet
 
 MODELS = []
 
@@ -11,7 +12,8 @@ MODELS = []
 def add_models(module):
   MODELS.extend([getattr(module, a) for a in dir(module) if 'Net' in a])
 
-add_models(res16unet)
+#add_models(res16unet)
+add_models(minkunet)
 
 def get_models():
   '''Returns a tuple of sample models.'''

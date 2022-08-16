@@ -32,9 +32,9 @@ trainer:
 
 # Network specific configurations
 net:
-  model: Res16UNet34C
-  model_n_out: 32 #Feature dimension
-  conv1_kernel_size: 3
+  model: MinkUNet
+  model_n_out: 96 #Feature dimension
+  conv1_kernel_size: 4
   normalize_feature: True
   dist_type: L2
 
@@ -61,7 +61,7 @@ misc:
   config: 
   lenient_weight_loading: False # Weights with the same size will be loaded
 
-  train_num_thread: 2
+  train_num_thread: 0
   nn_max_n: 500 # The maximum number of features to find nearest neighbors in batch
 
   # NCE related
@@ -69,7 +69,7 @@ misc:
   npos: 4096
 
   # TODO(s9xie): all args for scannet training
-  num_workers: 2
+  num_workers: 0
   train_limit_numpoints: 0
   data_aug_scale_min: 0.9
   data_aug_scale_max: 1.1
@@ -82,9 +82,9 @@ misc:
 # Dataset specific configurations
 data:
   dataset: ScanNetMatchPairDataset
-  voxel_size: 0.025
-  dataset_root_dir: /private/home/PointContrast/pretrain/pointcontrast/example_dataset
-  scannet_match_dir: overlap-30-50p-subset.txt
+  voxel_size: 0.05
+  dataset_root_dir: /home/PointContrast/Datasets/PointContrastSemKITTI/data_odometry_velodyne/dataset/point_contrast_seq
+  scannet_match_dir: overlaps_semkitti.txt
 
 hydra:
   run:

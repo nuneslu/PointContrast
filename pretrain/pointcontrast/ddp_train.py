@@ -51,7 +51,7 @@ def main(config):
       config = resume_config
 
   logging.info('===> Configurations')
-  logging.info(config.pretty())
+  logging.info(config)
 
   # Convert to dict
   if config.misc.num_gpus > 1:

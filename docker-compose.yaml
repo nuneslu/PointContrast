@@ -1,0 +1,8 @@
+services:
+        pretrain:
+                image: nuneslu/pointcontrast:latest
+                runtime: nvidia
+                volumes: 
+                        - $PWD:/home/PointContrast
+                        - $PWD/Datasets/:/home/PointContrast/Datasets
+

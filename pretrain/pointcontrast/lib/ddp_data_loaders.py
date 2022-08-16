@@ -215,22 +215,28 @@ class ScanNetMatchPairDataset(torch.utils.data.Dataset):
       xyz1 = scale * xyz1
 
     if self.random_rotation:
-      T0 = sample_random_trans(xyz0, self.randg, self.rotation_range)
-      T1 = sample_random_trans(xyz1, self.randg, self.rotation_range)
+      T0 = sample_random_trans(xyz0[:,:3], self.randg, self.rotation_range)
+      T1 = sample_random_trans(xyz1[:,:3], self.randg, self.rotation_range)
       trans = T1 @ np.linalg.inv(T0)
 
-      xyz0 = self.apply_transform(xyz0, T0)
-      xyz1 = self.apply_transform(xyz1, T1)
+      xyz0[:,:3] = self.apply_transform(xyz0[:,:3], T0)
+      xyz1[:,:3] = self.apply_transform(xyz1[:,:3], T1)
     else:
       trans = np.identity(4)
 
     # Voxelization
-    sel0 = ME.utils.sparse_quantize(xyz0 / self.voxel_size, return_index=True)
-    sel1 = ME.utils.sparse_quantize(xyz1 / self.voxel_size, return_index=True)
+    xyz0_ = xyz0.copy()
+    xyz0_ = np.round(xyz0_[:,:3] / self.voxel_size)
+    xyz0_ -= xyz0_.min(0, keepdims=1)
+    _, sel0 = ME.utils.sparse_quantize(xyz0_, return_index=True)
+    xyz1_ = xyz1.copy()
+    xyz1_ = np.round(xyz1_[:,:3] / self.voxel_size)
+    xyz1_ -= xyz1_.min(0, keepdims=1)
+    _, sel1 = ME.utils.sparse_quantize(xyz1_, return_index=True)
 
     # Make point clouds using voxelized points
-    pcd0 = make_open3d_point_cloud(xyz0)
-    pcd1 = make_open3d_point_cloud(xyz1)
+    pcd0 = make_open3d_point_cloud(xyz0[:,:3])
+    pcd1 = make_open3d_point_cloud(xyz1[:,:3])
 
     # Select features and points using the returned voxelized indices
     pcd0.colors = o3d.utility.Vector3dVector(color0[sel0])
@@ -252,17 +258,20 @@ class ScanNetMatchPairDataset(torch.utils.data.Dataset):
     feats1 = np.hstack(feats_train1)
 
     # Get coords
-    xyz0 = np.array(pcd0.points)
-    xyz1 = np.array(pcd1.points)
+    xyz_0 = np.array(pcd0.points)
+    xyz_1 = np.array(pcd1.points)
 
-    coords0 = np.floor(xyz0 / self.voxel_size)
-    coords1 = np.floor(xyz1 / self.voxel_size)
+    coords0 = xyz0_[sel0]#np.floor(xyz0 / self.voxel_size)
+    coords1 = xyz1_[sel1]#np.floor(xyz1 / self.voxel_size)
 
     if self.transform:
       coords0, feats0 = self.transform(coords0, feats0)
       coords1, feats1 = self.transform(coords1, feats1)
 
-    return (xyz0, xyz1, coords0, coords1, feats0, feats1, matches, trans)
+    feats0 = np.concatenate((feats0, xyz0[sel0,-1][:,None]), -1)
+    feats1 = np.concatenate((feats1, xyz1[sel1,-1][:,None]), -1)
+
+    return (xyz_0, xyz_1, coords0, coords1, feats0, feats1, matches, trans)
 
 
 ALL_DATASETS = [ScanNetMatchPairDataset]
