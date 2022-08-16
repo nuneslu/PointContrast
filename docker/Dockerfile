@@ -21,7 +21,13 @@ RUN apt-get install -y git ninja-build cmake build-essential libopenblas-dev \
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 
-WORKDIR /home/PointContrast
+# Add user to sahre files and folder without root permissions
+ENV GROUP_ID=1000
+ENV USER_ID=1000
+RUN addgroup --gid $GROUP_ID tarl && adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID tarl
+USER tarl
+
+WORKDIR /home/PointContrast/pretrain/pointcontrast
 # For faster build, use more jobs.
 #ENV MAX_JOBS=4
 #RUN pip install -U git+https://github.com/NVIDIA/MinkowskiEngine -v --no-deps \
