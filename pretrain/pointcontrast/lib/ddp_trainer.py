@@ -255,7 +255,8 @@ class HardestContrastiveLossTrainer(ContrastiveLossTrainer):
       total_loss += batch_loss
       total_num += 1
 
-      if curr_iter % self.lr_update_freq == 0 or curr_iter == 1:
+      #if curr_iter % self.lr_update_freq == 0 or curr_iter == 1:
+      if epoch % 10 == 0 or curr_iter == 1:
         lr = self.scheduler.get_last_lr()
         self.scheduler.step()
         if self.is_master:
@@ -274,6 +275,7 @@ class HardestContrastiveLossTrainer(ContrastiveLossTrainer):
                 data_meter.avg, total_timer.avg - data_meter.avg, total_timer.avg, self.scheduler.get_last_lr()))
         data_meter.reset()
         total_timer.reset()
+        torch.cuda.empty_cache()
 
   def _train_iter(self, data_loader_iter, timers):
     self.model.train()

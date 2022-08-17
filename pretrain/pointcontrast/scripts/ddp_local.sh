@@ -11,10 +11,10 @@ python ddp_train.py \
 	net.model=MinkUNet \
 	net.conv1_kernel_size=4 \
 	opt.lr=0.1 \
-        opt.max_iter=214200 \
+        opt.max_iter=428400 \
 	data.dataset=ScanNetMatchPairDataset \
 	data.voxel_size=0.05 \
-	trainer.batch_size=32 \
+	trainer.batch_size=4 \
         trainer.stat_freq=1 \
         trainer.lr_update_freq=250 \
 	misc.num_gpus=1 \
@@ -24,4 +24,4 @@ python ddp_train.py \
 	trainer.trainer=HardestContrastiveLossTrainer \
         data.dataset_root_dir=/home/PointContrast/Datasets/PointContrastSemKITTI/data_odometry_velodyne/dataset/point_contrast_seq \
         data.scannet_match_dir=overlaps_semkitti.txt \
-	# trainer.trainer=PointNCELossTrainer \
+	#trainer.trainer=PointNCELossTrainer \
