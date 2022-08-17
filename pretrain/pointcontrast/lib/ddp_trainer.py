@@ -286,7 +286,13 @@ class HardestContrastiveLossTrainer(ContrastiveLossTrainer):
     data_time = 0
     total_timer.tic()
     data_timer.tic()
-    input_dict = data_loader_iter.next()
+
+    try:
+        input_dict = data_loader_iter.next()
+    except StopIteration:
+        data_loader_iter = self.data_loader.__iter__()
+        input_dict = data_loader_iter.next()
+
     data_time += data_timer.toc(average=False)
 
     sinput0 = ME.SparseTensor(
