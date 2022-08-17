@@ -41,7 +41,7 @@ net:
 # Optimizer arguments
 opt:
   optimizer: SGD
-  max_iter: 300000
+  max_iter: 214200
   lr: 1e-1
   momentum: 0.8
   sgd_momentum: 0.9
@@ -61,7 +61,7 @@ misc:
   config: 
   lenient_weight_loading: False # Weights with the same size will be loaded
 
-  train_num_thread: 0
+  train_num_thread: 2
   nn_max_n: 500 # The maximum number of features to find nearest neighbors in batch
 
   # NCE related
@@ -69,7 +69,7 @@ misc:
   npos: 4096
 
   # TODO(s9xie): all args for scannet training
-  num_workers: 0
+  num_workers: 2
   train_limit_numpoints: 0
   data_aug_scale_min: 0.9
   data_aug_scale_max: 1.1
@@ -97,7 +97,7 @@ hydra:
     name: ${hydra.job.name}
     timeout_min: 3600
     cpus_per_task: 80
-    gpus_per_node: 8
+    gpus_per_node: 1
     tasks_per_node: 1
     mem_gb: 480
     nodes: 1

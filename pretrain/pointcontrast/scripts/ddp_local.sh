@@ -11,10 +11,10 @@ python ddp_train.py \
 	net.model=MinkUNet \
 	net.conv1_kernel_size=4 \
 	opt.lr=0.1 \
-        opt.max_iter=60000 \
+        opt.max_iter=214200 \
 	data.dataset=ScanNetMatchPairDataset \
 	data.voxel_size=0.05 \
-	trainer.batch_size=2 \
+	trainer.batch_size=32 \
         trainer.stat_freq=1 \
         trainer.lr_update_freq=250 \
 	misc.num_gpus=1 \
