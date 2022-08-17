@@ -69,7 +69,7 @@ misc:
   npos: 4096
 
   # TODO(s9xie): all args for scannet training
-  num_workers: 2
+  num_workers: 0
   train_limit_numpoints: 0
   data_aug_scale_min: 0.9
   data_aug_scale_max: 1.1
