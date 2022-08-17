@@ -4,6 +4,9 @@ ARG CUDNN="8"
 
 FROM pytorch/pytorch:${PYTORCH}-cuda${CUDA}-cudnn${CUDNN}-devel
 
+ARG UID
+ARG GID
+
 ##############################################
 # You should modify this to match your GPU compute capability
 #ENV TORCH_CUDA_ARCH_LIST="6.0 6.1 7.0+PTX"
@@ -22,8 +25,8 @@ RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 
 # Add user to share files and folder without root permissions
-ENV GROUP_ID=501
-ENV USER_ID=33020
+ENV GROUP_ID=$GID
+ENV USER_ID=$UID
 RUN addgroup --gid $GROUP_ID tarl && adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID tarl
 USER tarl
 
