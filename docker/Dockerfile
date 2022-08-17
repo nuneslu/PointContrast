@@ -4,6 +4,8 @@ ARG CUDNN="8"
 
 FROM pytorch/pytorch:${PYTORCH}-cuda${CUDA}-cudnn${CUDNN}-devel
 
+# Receive it from host env variables build with:
+# docker build . -t nuneslu/pointcontrast:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
 ARG UID
 ARG GID
 
