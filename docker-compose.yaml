@@ -2,7 +2,6 @@ services:
         pretrain:
                 image: nuneslu/pointcontrast:latest
                 runtime: nvidia
-                user: 33020:501
                 environment:
                       - NVIDIA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
                 volumes: 
