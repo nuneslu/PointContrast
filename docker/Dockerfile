@@ -21,9 +21,9 @@ RUN apt-get install -y git ninja-build cmake build-essential libopenblas-dev \
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 
-# Add user to sahre files and folder without root permissions
-ENV GROUP_ID=1000
-ENV USER_ID=1000
+# Add user to share files and folder without root permissions
+ENV GROUP_ID=501
+ENV USER_ID=33020
 RUN addgroup --gid $GROUP_ID tarl && adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID tarl
 USER tarl
 
