@@ -230,7 +230,7 @@ class ScanNetMatchPairDataset(torch.utils.data.Dataset):
     xyz0_ -= xyz0_.min(0, keepdims=1)
     _, sel0 = ME.utils.sparse_quantize(xyz0_, return_index=True)
     # same num_points used in TARL
-    sample_pts = 20000
+    sample_pts = 40000
     if len(sel0) > sample_pts:
         np.random.seed(42)
         sel0 = np.random.choice(sel0, sample_pts, replace=False)

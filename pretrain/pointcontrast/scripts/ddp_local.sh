@@ -14,7 +14,7 @@ python ddp_train.py \
         opt.max_iter=428400 \
 	data.dataset=ScanNetMatchPairDataset \
 	data.voxel_size=0.05 \
-	trainer.batch_size=8 \
+	trainer.batch_size=6 \
         trainer.stat_freq=1 \
         trainer.lr_update_freq=250 \
 	misc.num_gpus=1 \

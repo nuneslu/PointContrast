@@ -5,7 +5,7 @@ defaults:
 trainer:
   trainer: HardestContrastiveLossTrainer
   save_freq_epoch: 1
-  batch_size: 4
+  batch_size: 6
 
   # Hard negative mining
   use_hard_negative: True
