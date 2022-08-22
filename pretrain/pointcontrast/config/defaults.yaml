@@ -61,7 +61,7 @@ misc:
   config: 
   lenient_weight_loading: False # Weights with the same size will be loaded
 
-  train_num_thread: 2
+  train_num_thread: 8
   nn_max_n: 500 # The maximum number of features to find nearest neighbors in batch
 
   # NCE related

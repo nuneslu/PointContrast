@@ -241,7 +241,7 @@ class HardestContrastiveLossTrainer(ContrastiveLossTrainer):
 
     curr_iter = self.curr_iter
     data_loader = self.data_loader
-    data_loader_iter = self.data_loader.__iter__()
+    self.data_loader_iter = self.data_loader.__iter__()
     data_meter, data_timer, total_timer = AverageMeter(), Timer(), Timer()
     
     total_loss = 0
@@ -251,7 +251,7 @@ class HardestContrastiveLossTrainer(ContrastiveLossTrainer):
 
       curr_iter += 1
       epoch = curr_iter / len(self.data_loader)
-      batch_loss, batch_pos_loss, batch_neg_loss = self._train_iter(data_loader_iter, [data_meter, data_timer, total_timer])
+      batch_loss, batch_pos_loss, batch_neg_loss = self._train_iter([data_meter, data_timer, total_timer])
       total_loss += batch_loss
       total_num += 1
 
@@ -277,7 +277,7 @@ class HardestContrastiveLossTrainer(ContrastiveLossTrainer):
         total_timer.reset()
         torch.cuda.empty_cache()
 
-  def _train_iter(self, data_loader_iter, timers):
+  def _train_iter(self, timers):
     self.model.train()
     data_meter, data_timer, total_timer = timers
     
@@ -288,10 +288,10 @@ class HardestContrastiveLossTrainer(ContrastiveLossTrainer):
     data_timer.tic()
 
     try:
-        input_dict = data_loader_iter.next()
-    except StopIteration:
-        data_loader_iter = self.data_loader.__iter__()
-        input_dict = data_loader_iter.next()
+        input_dict = self.data_loader_iter.next()
+    except StopIteration as e:
+        self.data_loader_iter = self.data_loader.__iter__()
+        input_dict = self.data_loader_iter.next()
 
     data_time += data_timer.toc(average=False)
 
@@ -351,7 +351,7 @@ class PointNCELossTrainer(ContrastiveLossTrainer):
 
     curr_iter = self.curr_iter
     data_loader = self.data_loader
-    data_loader_iter = self.data_loader.__iter__()
+    self.data_loader_iter = self.data_loader.__iter__()
     data_meter, data_timer, total_timer = AverageMeter(), Timer(), Timer()
     
     total_loss = 0
@@ -361,7 +361,7 @@ class PointNCELossTrainer(ContrastiveLossTrainer):
 
       curr_iter += 1
       epoch = curr_iter / len(self.data_loader)
-      batch_loss = self._train_iter(data_loader_iter, [data_meter, data_timer, total_timer])
+      batch_loss = self._train_iter([data_meter, data_timer, total_timer])
       total_loss += batch_loss
       total_num += 1
 
@@ -385,7 +385,7 @@ class PointNCELossTrainer(ContrastiveLossTrainer):
         total_timer.reset()
 
 
-  def _train_iter(self, data_loader_iter, timers):
+  def _train_iter(self, timers):
     data_meter, data_timer, total_timer = timers
     
     self.optimizer.zero_grad()
@@ -394,7 +394,13 @@ class PointNCELossTrainer(ContrastiveLossTrainer):
     total_timer.tic()
     
     data_timer.tic()
-    input_dict = data_loader_iter.next()
+
+    try:
+        input_dict = data_loader_iter.next()
+    except StopIteration:
+        self.data_loader_iter = self.data_loader.__iter__()
+        input_dict = data_loader_iter.next()
+
     data_time += data_timer.toc(average=False)
 
     sinput0 = ME.SparseTensor(
