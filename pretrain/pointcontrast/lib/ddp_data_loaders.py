@@ -180,8 +180,6 @@ class ScanNetMatchPairDataset(torch.utils.data.Dataset):
     else:
         raise NotImplementedError
 
-    self.files = self.files[:32]
-
   def reset_seed(self, seed=0):
     logging.info(f"Resetting the data loader seed to {seed}")
     self.randg.seed(seed)
