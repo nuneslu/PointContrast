@@ -11,7 +11,7 @@ python ddp_train.py \
 	net.model=MinkUNet \
 	net.conv1_kernel_size=4 \
 	opt.lr=0.1 \
-        opt.max_iter=571200 \
+        opt.max_iter=857000 \
 	data.dataset=ScanNetMatchPairDataset \
 	data.voxel_size=0.05 \
 	trainer.batch_size=4 \
