@@ -16,7 +16,7 @@ python ddp_train.py \
 	data.voxel_size=0.05 \
 	trainer.batch_size=4 \
         trainer.stat_freq=1 \
-        trainer.lr_update_freq=250 \
+        trainer.lr_update_freq=3500 \
 	misc.num_gpus=1 \
         misc.npos=4096 \
         misc.nceT=0.4 \
