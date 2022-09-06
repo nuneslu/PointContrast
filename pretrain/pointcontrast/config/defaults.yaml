@@ -3,7 +3,7 @@ defaults:
   - hydra/hydra_logging: colorlog
 
 trainer:
-  trainer: HardestContrastiveLossTrainer
+  trainer: PointNCELossTrainer
   save_freq_epoch: 1
   batch_size: 6
 

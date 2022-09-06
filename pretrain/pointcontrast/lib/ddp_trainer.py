@@ -397,19 +397,19 @@ class PointNCELossTrainer(ContrastiveLossTrainer):
     data_timer.tic()
 
     try:
-        input_dict = data_loader_iter.next()
+        input_dict = self.data_loader_iter.next()
     except StopIteration:
         self.data_loader_iter = self.data_loader.__iter__()
-        input_dict = data_loader_iter.next()
+        input_dict = self.data_loader_iter.next()
 
     data_time += data_timer.toc(average=False)
 
     sinput0 = ME.SparseTensor(
-        input_dict['sinput0_F'], coords=input_dict['sinput0_C']).to(self.cur_device)
+        features=input_dict['sinput0_F'], coordinates=input_dict['sinput0_C'], device=self.cur_device)
     F0 = self.model(sinput0).F
 
     sinput1 = ME.SparseTensor(
-        input_dict['sinput1_F'], coords=input_dict['sinput1_C']).to(self.cur_device)
+        features=input_dict['sinput1_F'], coordinates=input_dict['sinput1_C'], device=self.cur_device)
     F1 = self.model(sinput1).F
 
     N0, N1 = input_dict['pcd0'].shape[0], input_dict['pcd1'].shape[0]
