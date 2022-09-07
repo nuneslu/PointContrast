@@ -369,9 +369,10 @@ class PointNCELossTrainer(ContrastiveLossTrainer):
       if curr_iter % self.lr_update_freq == 0 or curr_iter == 1:
         lr = self.scheduler.get_last_lr()
         self.scheduler.step()
-        if self.is_master:
-          logging.info(f" Epoch: {epoch}, LR: {lr}")
-          self._save_checkpoint(curr_iter, 'checkpoint_'+str(curr_iter))
+      
+      if self.is_master and epoch % 10 == 0:
+        logging.info(f" Epoch: {epoch}, LR: {lr}")
+        self._save_checkpoint(curr_iter, 'checkpoint_'+str(curr_iter))
 
       # Print logs
       if curr_iter % self.stat_freq == 0 and self.is_master:
@@ -384,6 +385,7 @@ class PointNCELossTrainer(ContrastiveLossTrainer):
                 data_meter.avg, total_timer.avg - data_meter.avg, total_timer.avg, self.scheduler.get_last_lr()))
         data_meter.reset()
         total_timer.reset()
+        torch.cuda.empty_cache()
 
 
   def _train_iter(self, timers):
