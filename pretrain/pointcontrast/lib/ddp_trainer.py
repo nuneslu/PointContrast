@@ -299,11 +299,12 @@ class HardestContrastiveLossTrainer(ContrastiveLossTrainer):
     sinput0 = ME.SparseTensor(
         features=input_dict['sinput0_F'], coordinates=input_dict['sinput0_C'], device=self.cur_device)
     F0 = self.model(sinput0).F
+    F0 = F0 / torch.norm(F0, p=2, dim=1, keepdim=True)
 
     sinput1 = ME.SparseTensor(
         features=input_dict['sinput1_F'], coordinates=input_dict['sinput1_C'], device=self.cur_device)
-
     F1 = self.model(sinput1).F
+    F1 = F1 / torch.norm(F1, p=2, dim=1, keepdim=True)
 
     pos_pairs = input_dict['correspondences']
     pos_loss, neg_loss = self.contrastive_hardest_negative_loss(
@@ -409,10 +410,12 @@ class PointNCELossTrainer(ContrastiveLossTrainer):
     sinput0 = ME.SparseTensor(
         features=input_dict['sinput0_F'], coordinates=input_dict['sinput0_C'], device=self.cur_device)
     F0 = self.model(sinput0).F
+    F0 = F0 / torch.norm(F0, p=2, dim=1, keepdim=True)
 
     sinput1 = ME.SparseTensor(
         features=input_dict['sinput1_F'], coordinates=input_dict['sinput1_C'], device=self.cur_device)
     F1 = self.model(sinput1).F
+    F1 = F1 / torch.norm(F1, p=2, dim=1, keepdim=True)
 
     N0, N1 = input_dict['pcd0'].shape[0], input_dict['pcd1'].shape[0]
     pos_pairs = input_dict['correspondences'].to(self.cur_device)

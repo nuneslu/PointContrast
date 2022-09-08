@@ -211,8 +211,8 @@ class ScanNetMatchPairDataset(torch.utils.data.Dataset):
       scale = self.min_scale + \
           (self.max_scale - self.min_scale) * random.random()
       matching_search_voxel_size *= scale
-      xyz0 = scale * xyz0
-      xyz1 = scale * xyz1
+      xyz0[:,:3] = scale * xyz0[:,:3]
+      xyz1[:,:3] = scale * xyz1[:,:3]
 
     if self.random_rotation:
       T0 = sample_random_trans(xyz0[:,:3], self.randg, self.rotation_range)
@@ -279,8 +279,8 @@ class ScanNetMatchPairDataset(torch.utils.data.Dataset):
       coords0, feats0 = self.transform(coords0, feats0)
       coords1, feats1 = self.transform(coords1, feats1)
 
-    feats0 = np.concatenate((feats0, xyz0[sel0,-1][:,None]), -1)
-    feats1 = np.concatenate((feats1, xyz1[sel1,-1][:,None]), -1)
+    feats0 = xyz0[sel0]#np.concatenate((feats0, xyz0[sel0,-1][:,None]), -1)
+    feats1 = xyz1[sel1]#np.concatenate((feats1, xyz1[sel1,-1][:,None]), -1)
 
     return (xyz_0, xyz_1, coords0, coords1, feats0, feats1, matches, trans)
 
