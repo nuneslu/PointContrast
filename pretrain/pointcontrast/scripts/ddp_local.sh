@@ -21,7 +21,7 @@ python ddp_train.py \
         misc.npos=4096 \
         misc.nceT=0.4 \
 	misc.out_dir=${OUT_DIR} \
-	trainer.trainer=PointNCELossTrainer \
+	#trainer.trainer=HardestContrastiveLossTrainer \
         data.dataset_root_dir=/home/PointContrast/Datasets/PointContrastSemKITTI/data_odometry_velodyne/dataset/point_contrast_seq \
         data.scannet_match_dir=overlaps_semkitti.txt \
-	#trainer.trainer=PointNCELossTrainer \
+	trainer.trainer=PointNCELossTrainer \

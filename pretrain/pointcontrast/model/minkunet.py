@@ -7,6 +7,36 @@ import MinkowskiEngine as ME
 
 __all__ = ['MinkUNet']
 
+class SMLP(nn.Module):
+    def __init__(
+        self, dims, use_bn=False, use_relu=True, use_dropout=False, use_bias=True
+    ):
+        super().__init__()
+        layers = []
+        last_dim = dims[0]
+        counter = 1
+        for dim in dims[1:]:
+            layers.append(ME.MinkowskiLinear(last_dim, dim, bias=use_bias))
+            counter += 1
+            if use_bn:
+                layers.append(
+                    ME.MinkowskiBatchNorm(
+                        dim,
+                        eps=1e-5,
+                        momentum=0.1,
+                    )
+                )
+            if (counter < len(dims)) and use_relu:
+                layers.append(ME.MinkowskiReLU(inplace=True))
+                last_dim = dim
+            if use_dropout:
+                layers.append(MinkowskiDropout.Dropout())
+        self.clf = nn.Sequential(*layers)
+
+    def forward(self, batch):
+        out = self.clf(batch)
+        return out
+
 
 class BasicConvolutionBlock(nn.Module):
     def __init__(self, inc, outc, ks=3, stride=1, dilation=1, D=3):
@@ -161,6 +191,8 @@ class MinkUNet(nn.Module):
         self.weight_initialization()
         self.dropout = nn.Dropout(0.3, True)
 
+        self.head = SMLP([96,256,128])
+
     def weight_initialization(self):
         for m in self.modules():
             if isinstance(m, nn.BatchNorm1d):
@@ -189,6 +221,6 @@ class MinkUNet(nn.Module):
         y4 = self.up4[0](y3)
         y4 = ME.cat(y4, x0)
         y4 = self.up4[1](y4)
-        
-        return y4
+
+        return self.head(y4)
 
